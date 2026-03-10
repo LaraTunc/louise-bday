@@ -44,51 +44,71 @@
 
     </div>
 
-
     <script>
 
         function startProcess() {
 
             document.getElementById("app").innerHTML = `
-<h1>Birthday Verification</h1>
+    <h1>Birthday Verification</h1>
+    
+    <p>Please confirm that you are currently having a birthday.</p>
+    
+    <div id="checkboxArea" style="position:relative; height:400px;"></div>
+    
+    <p id="instruction">Check the birthday confirmation box.</p>
+    `;
 
-<p>Please complete the verification protocol.</p>
-
-<p>Step 1: Confirm birthday</p>
-
-<div id="confirmArea">
-<button onclick="duplicate()">Confirm Birthday</button>
-</div>
-
-<p id="instruction">You must confirm birthday.</p>
-`;
+            spawnCheckbox();
 
         }
 
-        let clickCount = 0;
+        let escapeCount = 0;
+        const maxEscapes = 7;
 
-        function duplicate() {
+        function spawnCheckbox() {
 
-            clickCount++;
+            const area = document.getElementById("checkboxArea");
 
-            const area = document.getElementById("confirmArea");
+            const wrapper = document.createElement("div");
+            wrapper.style.position = "absolute";
 
-            if (clickCount < 6) {
+            /* start in the middle */
+            wrapper.style.left = "50%";
+            wrapper.style.top = "50%";
+            wrapper.style.transform = "translate(-50%, -50%)";
 
-                let btn = document.createElement("button");
-                btn.innerText = "Confirm Birthday";
-                btn.onclick = duplicate;
+            const box = document.createElement("input");
+            box.type = "checkbox";
 
-                area.appendChild(btn);
+            box.onmouseover = function () {
 
-            } else {
+                if (escapeCount < maxEscapes) {
+
+                    escapeCount++;
+
+                    /* move to random place using % */
+                    wrapper.style.left = Math.random() * 80 + "%";
+                    wrapper.style.top = Math.random() * 80 + "%";
+
+                    wrapper.style.transform = "translate(0,0)";
+
+                }
+
+            };
+
+            box.onclick = function () {
 
                 document.getElementById("instruction").innerHTML =
-                    "✔ Enough birthday confirmations detected";
+                    "✔ Birthday confirmed.";
 
                 setTimeout(showSuccess, 1000);
 
-            }
+            };
+
+            wrapper.appendChild(box);
+            wrapper.append(" I certify that today is my birthday");
+
+            area.appendChild(wrapper);
 
         }
 
