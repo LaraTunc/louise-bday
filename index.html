@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Birthday Verification System</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            background: #ffe6f0;
+            padding-top: 100px;
+        }
+
+        button {
+            font-size: 18px;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        #startBtn {
+            background: #ff4da6;
+            color: white;
+        }
+
+        #confirmArea button {
+            background: #ff8ac6;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="app">
+
+        <h1>🎂 Birthday Verification System</h1>
+        <p>Verification required before birthday can begin.</p>
+
+        <button id="startBtn" onclick="startProcess()">START PROCESS</button>
+
+    </div>
+
+
+    <script>
+
+        function startProcess() {
+
+            document.getElementById("app").innerHTML = `
+<h1>Birthday Verification</h1>
+
+<p>Please complete the verification protocol.</p>
+
+<p>Step 1: Confirm birthday</p>
+
+<div id="confirmArea">
+<button onclick="duplicate()">Confirm Birthday</button>
+</div>
+
+<p id="instruction">You must confirm birthday.</p>
+`;
+
+        }
+
+        let clickCount = 0;
+
+        function duplicate() {
+
+            clickCount++;
+
+            const area = document.getElementById("confirmArea");
+
+            if (clickCount < 6) {
+
+                let btn = document.createElement("button");
+                btn.innerText = "Confirm Birthday";
+                btn.onclick = duplicate;
+
+                area.appendChild(btn);
+
+            } else {
+
+                document.getElementById("instruction").innerHTML =
+                    "✔ Enough birthday confirmations detected";
+
+                setTimeout(showSuccess, 1000);
+
+            }
+
+        }
+
+        function showSuccess() {
+
+            document.body.innerHTML = `
+<h1>✔ BIRTHDAY CONFIRMED</h1>
+
+<h2>🎉 HAPPY BIRTHDAY 🎉</h2>
+
+<p>The system has determined that you are indeed having a birthday.</p>
+
+<canvas id="confetti"></canvas>
+`;
+
+            startConfetti();
+
+        }
+
+        function startConfetti() {
+
+            const canvas = document.getElementById("confetti");
+            const ctx = canvas.getContext("2d");
+
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            let pieces = [];
+
+            for (let i = 0; i < 120; i++) {
+                pieces.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    r: Math.random() * 6 + 2,
+                    d: Math.random() * 50
+                });
+            }
+
+            function draw() {
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = "pink";
+
+                for (let i = 0; i < pieces.length; i++) {
+                    let p = pieces[i];
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2, true);
+                    ctx.fill();
+
+                    p.y += 2;
+
+                    if (p.y > canvas.height) {
+                        p.y = 0;
+                    }
+                }
+
+                requestAnimationFrame(draw);
+            }
+
+            draw();
+
+        }
+
+    </script>
+
+</body>
+
+</html>
